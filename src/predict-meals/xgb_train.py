@@ -61,7 +61,7 @@ def _main(args: argparse.Namespace):
     submission["중식계"] = lunch_preds
     submission["석식계"] = dinner_preds
 
-    submission.to_csv(args.path + args.file, index=False)
+    submission.to_csv(args.submit + args.file, index=False)
 
 
 if __name__ == "__main__":
