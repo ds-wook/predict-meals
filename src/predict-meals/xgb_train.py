@@ -9,11 +9,9 @@ from data.dataset import load_dataset
 def define_argparser():
     parse = argparse.ArgumentParser("Training!")
     parse.add_argument(
-        "--submit", type=str, help="Input data save path", default="../../submission/"
+        "--submit", type=str, help="Input data save path", default="../../submissions/"
     )
-    parse.add_argument(
-        "--path", type=str, default="../../input/predict-credit-card-delinquency/"
-    )
+    parse.add_argument("--path", type=str, default="../../input/predict-meals/")
     parse.add_argument("--file", type=str, help="Input file name", default="model.csv")
 
     args = parse.parse_args()
@@ -28,15 +26,14 @@ def _main(args: argparse.Namespace):
     X_test = test[["월", "일", "요일", "식사가능자수", "본사출장자수", "본사시간외근무명령서승인건수"]]
 
     lunch_params = {
-        "lambda": 0.014695381889341316,
-        "alpha": 7.411440351007072,
-        "subsample": 0.8,
+        "colsample_bytree": 0.9407078053937545,
+        "subsample": 0.6567160279948582,
         "learning_rate": 0.02,
-        "max_depth": 5,
-        "min_child_weight": 1,
+        "max_depth": 19,
+        "min_child_weight": 8,
+        "n_estimators": 10000,
+        "random_state": 42,
     }
-    lunch_params["n_estimators"] = 10000
-    lunch_params["random_state"] = 42
 
     lunch_model = XGBRegressor(**lunch_params)
     lunch_model.fit(X_lunch, y_lunch)
@@ -47,16 +44,14 @@ def _main(args: argparse.Namespace):
     y_dinner = train["석식계"]
 
     dinner_params = {
-        "lambda": 0.014750443224224807,
-        "alpha": 0.0010890646914942937,
-        "colsample_bytree": 1.0,
-        "subsample": 0.6,
-        "learning_rate": 0.012,
-        "max_depth": 7,
-        "min_child_weight": 2,
+        "colsample_bytree": 0.9407078053937545,
+        "subsample": 0.6567160279948582,
+        "learning_rate": 0.0520414339956619,
+        "max_depth": 19,
+        "min_child_weight": 8,
+        "n_estimators": 10000,
+        "random_state": 42,
     }
-    dinner_params["n_estimators"] = 10000
-    dinner_params["random_state"] = 42
 
     dinner_model = XGBRegressor(**dinner_params)
     dinner_model.fit(X_dinner, y_dinner)

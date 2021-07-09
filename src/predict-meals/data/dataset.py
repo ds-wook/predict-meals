@@ -5,10 +5,8 @@ import pandas as pd
 
 
 def load_dataset(path: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    path = "../input/predict-meals/"
     train = pd.read_csv(path + "train.csv")
     test = pd.read_csv(path + "test.csv")
-    submit = pd.read_csv(path + "sample_submission.csv")
 
     drops = ["조식메뉴", "중식메뉴", "석식메뉴"]
 
