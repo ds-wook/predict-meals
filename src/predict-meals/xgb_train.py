@@ -25,9 +25,9 @@ def _main(args: argparse.Namespace):
     y_lunch = train["중식계"]
     X_test = test[["월", "일", "요일", "식사가능자수", "본사출장자수", "본사시간외근무명령서승인건수"]]
 
-    lunch_params = pd.read_pickle("../../parameters/xgb_lunch_params.pkl")
+    lunch_params = pd.read_pickle("../../parameters/xgb_lunch_params2.pkl")
 
-    lunch_model = XGBRegressor(**lunch_params, verbosity=100)
+    lunch_model = XGBRegressor(**lunch_params, verbosity=3)
     lunch_model.fit(X_lunch, y_lunch)
 
     lunch_preds = lunch_model.predict(X_test)
@@ -35,8 +35,8 @@ def _main(args: argparse.Namespace):
     X_dinner = train[["월", "일", "요일(석식)", "식사가능자수", "본사출장자수", "본사시간외근무명령서승인건수"]]
     y_dinner = train["석식계"]
 
-    dinner_params = pd.read_pickle("../../parameters/xgb_dinner_params.pkl")
-    dinner_model = XGBRegressor(**dinner_params, verbosity=100)
+    dinner_params = pd.read_pickle("../../parameters/xgb_dinner_params2.pkl")
+    dinner_model = XGBRegressor(**dinner_params, verbosity=3)
     dinner_model.fit(X_dinner, y_dinner)
     dinner_preds = dinner_model.predict(X_test)
 

@@ -31,7 +31,7 @@ def _main(args: argparse.Namespace):
         X_lunch = train[["월", "일", "요일", "식사가능자수", "본사출장자수", "본사시간외근무명령서승인건수"]]
         y_lunch = train["중식계"]
         x_train, x_valid, y_train, y_valid = train_test_split(
-            X_lunch, y_lunch, test_size=0.3, random_state=42
+            X_lunch, y_lunch, test_size=0.15, random_state=42
         )
         objective = partial(
             xgb_lunch_objective,
@@ -53,7 +53,7 @@ def _main(args: argparse.Namespace):
         X_dinner = train[["월", "일", "요일(석식)", "식사가능자수", "본사출장자수", "본사시간외근무명령서승인건수"]]
         y_dinner = train["석식계"]
         x_train, x_valid, y_train, y_valid = train_test_split(
-            X_dinner, y_dinner, test_size=0.3, random_state=42
+            X_dinner, y_dinner, test_size=0.15, random_state=42
         )
         objective = partial(
             xgb_dinner_objective,
