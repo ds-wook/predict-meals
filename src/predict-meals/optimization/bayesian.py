@@ -2,6 +2,8 @@ import warnings
 from typing import Callable, Sequence, Union
 
 import joblib
+import neptune.new as neptune
+import neptune.new.integrations.optuna as optuna_utils
 import optuna
 import pandas as pd
 from optuna.samplers import TPESampler
@@ -20,9 +22,18 @@ class BayesianOptimizer:
         self.objective_function = objective_function
 
     def bulid_study(
-        self, trials: FrozenTrial, name: str, liar: bool = False, verbose: bool = True
+        self,
+        trials: FrozenTrial,
+        token: str,
+        name: str,
+        liar: bool = False,
+        verbose: bool = True,
     ):
         if liar:
+            run = neptune.init(project="ds-wook/predict-meals", api_token=token)
+            neptune_callback = optuna_utils.NeptuneCallback(
+                run, plots_update_freq=1, log_plot_slice=False, log_plot_contour=False
+            )
             sampler = TPESampler(
                 seed=42,
                 constant_liar=True,
@@ -33,13 +44,24 @@ class BayesianOptimizer:
             study = optuna.create_study(
                 study_name=name, direction="minimize", sampler=sampler
             )
-            study.optimize(self.objective_function, n_trials=trials)
+            study.optimize(
+                self.objective_function, n_trials=trials, callbacks=[neptune_callback]
+            )
+            run.stop()
+
         else:
+            run = neptune.init(project="ds-wook/predict-meals", api_token=token)
+            neptune_callback = optuna_utils.NeptuneCallback(
+                run, plots_update_freq=1, log_plot_slice=False, log_plot_contour=False
+            )
             sampler = TPESampler(seed=42)
             study = optuna.create_study(
                 study_name=name, direction="minimize", sampler=sampler
             )
-            study.optimize(self.objective_function, n_trials=trials)
+            study.optimize(
+                self.objective_function, n_trials=trials, callbacks=[neptune_callback]
+            )
+            run.stop()
 
         if verbose:
             self.display_study_statistics(study)

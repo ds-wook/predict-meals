@@ -1,6 +1,8 @@
 import argparse
 
+import neptune.new as neptune
 import pandas as pd
+from neptune.new.integrations.xgboost import NeptuneCallback
 from xgboost import XGBRegressor
 
 from data.dataset import load_dataset
@@ -8,6 +10,7 @@ from data.dataset import load_dataset
 
 def define_argparser():
     parse = argparse.ArgumentParser("Training!")
+    parse.add_argument("--token", type=str, default=None)
     parse.add_argument(
         "--submit", type=str, help="Input data save path", default="../../submissions/"
     )
@@ -21,6 +24,9 @@ def define_argparser():
 def _main(args: argparse.Namespace):
     path = args.path
     train, test = load_dataset(path)
+
+    run = neptune.init(project="ds-wook/predict-meals", token=args.token)
+    neptune_callback = NeptuneCallback(run=run, log_tree=[0, 1, 2, 3])
     X_lunch = train[["월", "일", "요일", "식사가능자수", "본사출장자수", "본사시간외근무명령서승인건수"]]
     y_lunch = train["중식계"]
     X_test = test[["월", "일", "요일", "식사가능자수", "본사출장자수", "본사시간외근무명령서승인건수"]]
@@ -28,7 +34,7 @@ def _main(args: argparse.Namespace):
     lunch_params = pd.read_pickle("../../parameters/xgb_lunch_params2.pkl")
 
     lunch_model = XGBRegressor(**lunch_params, verbosity=3)
-    lunch_model.fit(X_lunch, y_lunch)
+    lunch_model.fit(X_lunch, y_lunch, callbacks=[neptune_callback])
 
     lunch_preds = lunch_model.predict(X_test)
 
