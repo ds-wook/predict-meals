@@ -122,6 +122,7 @@ def xgb_lunch_objective(
         early_stopping_rounds=100,
         verbose=verbose,
     )
+
     preds = model.predict(x_valid)
 
     mae = mean_absolute_error(y_valid, preds)
