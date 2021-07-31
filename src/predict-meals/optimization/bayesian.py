@@ -6,6 +6,7 @@ import neptune.new as neptune
 import neptune.new.integrations.optuna as optuna_utils
 import optuna
 import pandas as pd
+from optuna.pruners import MedianPruner
 from optuna.samplers import TPESampler
 from optuna.study import Study
 from optuna.trial import FrozenTrial, Trial
@@ -24,13 +25,12 @@ class BayesianOptimizer:
     def bulid_study(
         self,
         trials: FrozenTrial,
-        token: str,
         name: str,
         liar: bool = False,
         verbose: bool = True,
     ):
         if liar:
-            run = neptune.init(project="ds-wook/predict-meals", api_token=token)
+            run = neptune.init(project="ds-wook/predict-meals")
             neptune_callback = optuna_utils.NeptuneCallback(
                 run, plots_update_freq=1, log_plot_slice=False, log_plot_contour=False
             )
@@ -40,6 +40,7 @@ class BayesianOptimizer:
                 multivariate=True,
                 group=True,
                 n_startup_trials=20,
+                
             )
             study = optuna.create_study(
                 study_name=name, direction="minimize", sampler=sampler
@@ -50,7 +51,7 @@ class BayesianOptimizer:
             run.stop()
 
         else:
-            run = neptune.init(project="ds-wook/predict-meals", api_token=token)
+            run = neptune.init(project="ds-wook/predict-meals")
             neptune_callback = optuna_utils.NeptuneCallback(
                 run, plots_update_freq=1, log_plot_slice=False, log_plot_contour=False
             )

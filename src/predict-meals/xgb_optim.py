@@ -46,7 +46,7 @@ def _main(args: argparse.Namespace):
         bayesian_optim = BayesianOptimizer(objective)
 
         study = bayesian_optim.bulid_study(
-            trials=args.trials, token=args.token, name=args.name, liar=args.liar
+            trials=args.trials, name=args.name, liar=args.liar
         )
         bayesian_optim.xgb_lunch_save_params(study, args.params)
 
