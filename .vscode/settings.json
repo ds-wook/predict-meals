@@ -1,24 +1,29 @@
 {
-    "python.pythonPath": "C:\\Anaconda3\\envs\\meals\\python.exe",
-    "python.linting.pylintEnabled": false,
-    "python.linting.flake8Enabled": true,
+    // 린팅 활성화
     "python.linting.enabled": true,
+    // flake8 사용
+    "python.linting.flake8Enabled": true,
+  
+    // 별도로 .flake8 config 파일을 생성하여 관리한다면 아래 내용은 불필요
     "python.linting.flake8Args": [
-        "--max-line-length=88",
-        "--ignore=E203, E501, W503"
+      // black의 기본 max line length 값은 88 이므로 맞춰준다.
+      // https://black.readthedocs.io/en/stable/the_black_code_style/current_style.html#line-length
+      "--max-line-length=88",
+      // 무시 할 에러코드
+      // 에러 코드 확인 -> https://flake8.pycqa.org/en/latest/user/error-codes.html
+      "--ignore=F401,E402"
     ],
+  
+    // black formatter 사용
     "python.formatting.provider": "black",
-    "python.formatting.blackArgs": [
-        "--line-length",
-        "88"
-    ],
-    "python.sortImports.args": [
-        "--profile=black",
-    ],
+  
     "[python]": {
-        "editor.codeActionsOnSave": {
-            "source.organizeImports": true
-        }
-    },
-    "editor.formatOnSave": true
-}
+      // 코드를 저장할 떄 마다 실행
+      "editor.formatOnSave": true,
+      "editor.codeActionsOnSave": {
+        // isort 사용 설정
+        "source.organizeImports": true,
+        "python.sortImports": true
+      }
+    }
+  }
