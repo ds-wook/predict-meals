@@ -130,3 +130,5 @@ dmypy.json
 input/*
 !input/.gitkeep
 .vscode/settings.json
+output/*
+!output/.gitkeep
